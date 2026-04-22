@@ -3,7 +3,7 @@ import numpy as np
 from line_profiler import profile
 import math
 
-chosen = 2310
+chosen = 210
 target = 1_000_000
 primes = [2]
 
@@ -11,10 +11,10 @@ for i in range(2,chosen):
 	flag = True
 
 	for p in primes:
-		if p*p > chosen:
-			break
 		if i%p == 0:
 			flag = False
+			break
+		if p*p > chosen:
 			break
 	if flag:
 		primes.append(i)
@@ -40,12 +40,17 @@ temp = rmdr.copy()
 @profile
 def run():
 	global temp,primes
-	for i in range(1,n):
 
+	ind = 1
+	part = [2]
+	for i in range(1,n):
 
 		temp += chosen
 
-		part = [p for p in primes if p*p < temp[-1]]
+		# part = [p for p in primes if p*p < temp[-1]]
+		while primes[ind] * primes[ind] < temp[-1]:
+			part.append(primes[ind])
+			ind += 1
 
 		to_del = []
 		for p in part:
@@ -77,7 +82,7 @@ run()
 end = time.time()
 print(end-start)
 
-# print(primes)
+# print(primes[-10:])
 
 # first = [1,2,3,4,5,6,7,8,9]
 
