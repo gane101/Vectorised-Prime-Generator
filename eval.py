@@ -3,8 +3,8 @@ import numpy as np
 from line_profiler import profile
 import math
 
-chosen = 6
-target = 100_000
+chosen = 510510
+target = 10_000_000
 primes = [2]
 
 for i in range(2,chosen):
@@ -42,7 +42,7 @@ def run():
 
 		temp += chosen
 
-		part = [p for p in primes if p < math.sqrt(temp[-1])]
+		part = [p for p in primes if p*p < temp[-1]]
 
 		for v in temp:
 			flag = True
@@ -55,9 +55,9 @@ def run():
 				primes.append(int(v))
 
 
-# start = time.time()
+start = time.time()
 run()
-# end = time.time()
-# print(end-start)
+end = time.time()
+print(end-start)
 # print(primes)
 
