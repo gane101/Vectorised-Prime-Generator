@@ -4,7 +4,7 @@ import time
 
 primes = [2]
 
-for i in range(2,500_000):
+for i in range(2,500):
 	flag = True
 	
 	for p in primes:
@@ -21,7 +21,7 @@ func = []
 
 for p in primes:
 	res *= (1-1/p)
-	func.append(res)
+	func.append(100-100*res)
 
 func = np.array(func)
 

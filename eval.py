@@ -2,13 +2,18 @@ import time
 import numpy as np
 from line_profiler import profile
 import math
+import sys
 
-chosen = 30030
-target = 10_000_000
-primes = [2]
+# chosen = 9699690
+# chosen = 510510
+# chosen = 30030
+chosen = int(sys.argv[1])
+target = int(sys.argv[2])
+# target = 100_000_000
 
 # All primes upto the chosen number
 
+primes = [2]
 for i in range(2,chosen):
 	flag = True
 
@@ -38,6 +43,11 @@ for i in range(chosen):
 		rmdr.append(i)
 rmdr = np.array(rmdr)
 
+check = 223
+# print(len(rmdr))
+# print(sorted(set(rmdr%check)))
+# print(len(sorted(set(rmdr%check))) == check)
+
 n = int(target/chosen) + 1
 temp = rmdr.copy()
 
@@ -53,35 +63,67 @@ def run():
 
 		# Checks if the subset of primes we are checking contains all primes less than sqrt of the largest number in current batch
 		# Because checking all the primes is expensive. And making this array with list comprehension each time is also expensive.
-		while primes[ind] * primes[ind] < temp[-1]:
+		while primes[ind] * primes[ind] <= temp[-1]:
 			part.append(primes[ind])
 			ind += 1
 
 		to_del = [] # Numbers to be deleted
+		temp2 = temp.copy()
 		for p in part:
 			# Checking the remainder of all the numbers at once after dividing by p
-			temp2 = temp % p
-			if 0 in temp2:
-				to_del += list(np.where(temp2==0)[0]) # Adding the numbers which are divisible by p in this list
+			temp3 = temp2 % p
+			# if 0 in temp3:
+			temp2 = np.delete(temp2, np.where(temp3==0)[0])
 
-		# Deleting the numbers at the indices from to_del and adding the remaining to the list of primes.
-		temp2 = temp.copy().tolist()
-		to_del = list(set(to_del))
-		to_del.sort()
-		if len(to_del) != 0:
-			for j in range(1,len(to_del)+1):
-				del temp2[to_del[-j]]
-		primes += temp2
+		primes += list(temp2)
+		# primes = list(set(primes))
 
 # Running the program and calculating the time.
 
+# print("Start")
 start = time.time()
 run()
 end = time.time()
 print(end-start)
 
+print(len(primes))
+
+# print(primes[:100])
+
+# start = time.time()
+# primes = [2]
+
+# for i in range(2,target):
+# 	flag = True
+# 	for p in primes:
+# 		if i%p == 0:
+# 			flag = False
+# 			break
+# 		if p*p > i:
+# 			break
+# 	if flag:
+# 		primes.append(i)
+
+# end = time.time()
+# print(end-start)
 
 
+
+# start = time.time()
+# primes = []
+# nums = [1]*(target+1)
+
+# nums[0] = 0
+# nums[1] = 0
+# nums[2] = 1
+
+# for i in range(2,target):
+# 	if nums[i] == 1:
+# 		nums[i::i] = [0]*(int(target/i))
+# 		primes.append(i)
+
+# end = time.time()
+# print(end-start)
 
 
 
