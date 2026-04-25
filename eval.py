@@ -3,9 +3,11 @@ import numpy as np
 from line_profiler import profile
 import math
 
-chosen = 210
-target = 1_000_000
+chosen = 30030
+target = 10_000_000
 primes = [2]
+
+# All primes upto the chosen number
 
 for i in range(2,chosen):
 	flag = True
@@ -18,6 +20,8 @@ for i in range(2,chosen):
 			break
 	if flag:
 		primes.append(i)
+
+# Make a vector of all the co-primes of the chosen number
 
 factors = []
 nums = [1]*(chosen+1)
@@ -47,16 +51,20 @@ def run():
 
 		temp += chosen
 
-		# part = [p for p in primes if p*p < temp[-1]]
+		# Checks if the subset of primes we are checking contains all primes less than sqrt of the largest number in current batch
+		# Because checking all the primes is expensive. And making this array with list comprehension each time is also expensive.
 		while primes[ind] * primes[ind] < temp[-1]:
 			part.append(primes[ind])
 			ind += 1
 
-		to_del = []
+		to_del = [] # Numbers to be deleted
 		for p in part:
+			# Checking the remainder of all the numbers at once after dividing by p
 			temp2 = temp % p
 			if 0 in temp2:
-				to_del += list(np.where(temp2==0)[0])
+				to_del += list(np.where(temp2==0)[0]) # Adding the numbers which are divisible by p in this list
+
+		# Deleting the numbers at the indices from to_del and adding the remaining to the list of primes.
 		temp2 = temp.copy().tolist()
 		to_del = list(set(to_del))
 		to_del.sort()
@@ -65,41 +73,12 @@ def run():
 				del temp2[to_del[-j]]
 		primes += temp2
 
-		
-		# for v in temp:
-		# 	flag = True
-
-		# 	for p in part:
-		# 		if v%p==0:
-		# 			flag = False
-		# 			break
-		# 	if flag:
-		# 		primes.append(int(v))
-
+# Running the program and calculating the time.
 
 start = time.time()
 run()
 end = time.time()
 print(end-start)
-
-# print(primes[-10:])
-
-# first = [1,2,3,4,5,6,7,8,9]
-
-# a = np.array(first)
-# b = a % 4
-
-# print(b)
-
-# i = np.where(b==0)[0]
-
-# print(i)
-
-# for j in range(1,len(i)+1):
-	# del first[i[-j]]
-
-# print(a)
-
 
 
 
