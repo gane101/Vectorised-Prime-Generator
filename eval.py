@@ -4,28 +4,30 @@ from line_profiler import profile
 import math
 import sys
 
-# chosen = 9699690
-# chosen = 510510
-# chosen = 30030
+# 2,6,30,210,2310,30030,510510,9699690,223092870
+
 chosen = int(sys.argv[1])
 target = int(sys.argv[2])
-# target = 100_000_000
+
+options = [2,6,30,210,2310,30030,510510,9699690,223092870]
 
 # All primes upto the chosen number
 
-primes = [2]
-for i in range(2,chosen):
+start = time.time()
+primes = [2,3,5,7,11,13,17,19,23]
+for i in range(23,chosen):
 	flag = True
 
 	for p in primes:
 		if i%p == 0:
 			flag = False
 			break
-		if p*p > chosen:
+		if p*p > i:
 			break
 	if flag:
 		primes.append(i)
-
+end = time.time()
+print(end-start)
 # Make a vector of all the co-primes of the chosen number
 
 factors = []
@@ -43,20 +45,22 @@ for i in range(chosen):
 		rmdr.append(i)
 rmdr = np.array(rmdr)
 
-check = 223
-# print(len(rmdr))
-# print(sorted(set(rmdr%check)))
-# print(len(sorted(set(rmdr%check))) == check)
-
 n = int(target/chosen) + 1
 temp = rmdr.copy()
 
+for i in range(len(options)):
+	if options[i] == chosen:
+		part = [primes[i+1]]
+		ind = i+2
+		# print(part,ind)
+		break
+
 @profile
 def run():
-	global temp,primes
+	global temp,primes,part,ind
 
-	ind = 1
-	part = [2]
+	# ind = 1
+	# part = [2,3,5,7,11,13,17,19,23]
 	for i in range(1,n):
 
 		temp += chosen
@@ -74,13 +78,17 @@ def run():
 			temp3 = temp2 % p
 			# if 0 in temp3:
 			temp2 = np.delete(temp2, np.where(temp3==0)[0])
+			# temp2 = np.delete(temp2, np.where(temp2 % p==0)[0])
+			# np.delete(temp2, np.where(temp2 % p==0)[0])
+			# if len(temp) == 0:
+				# break
+
 
 		primes += list(temp2)
 		# primes = list(set(primes))
 
 # Running the program and calculating the time.
 
-# print("Start")
 start = time.time()
 run()
 end = time.time()
@@ -88,11 +96,10 @@ print(end-start)
 
 print(len(primes))
 
-# print(primes[:100])
+# print(primes)
 
 # start = time.time()
 # primes = [2]
-
 # for i in range(2,target):
 # 	flag = True
 # 	for p in primes:
@@ -103,28 +110,20 @@ print(len(primes))
 # 			break
 # 	if flag:
 # 		primes.append(i)
-
 # end = time.time()
 # print(end-start)
 
-
-
-# start = time.time()
-# primes = []
 # nums = [1]*(target+1)
-
-# nums[0] = 0
-# nums[1] = 0
-# nums[2] = 1
-
+# primes = []
+# start = time.time()
 # for i in range(2,target):
 # 	if nums[i] == 1:
 # 		nums[i::i] = [0]*(int(target/i))
 # 		primes.append(i)
-
 # end = time.time()
 # print(end-start)
 
+# print(primes)
 
 
 
